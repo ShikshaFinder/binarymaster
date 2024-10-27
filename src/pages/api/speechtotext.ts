@@ -1,4 +1,5 @@
 // /pages/api/speech-to-text.js
+export const runtime = "edge";
 import {
   SpeechConfig,
   AudioConfig,

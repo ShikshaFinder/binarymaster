@@ -1,4 +1,4 @@
-import { FileUpload } from "../components/ui/file-upload";
+import supabase from "../../supabase";
 import React from "react";
 import { TypewriterEffectSmooth } from "../components/ui/typewriter-effect";
 import { LampContainer } from "@/components/ui/lamp";
@@ -28,18 +28,7 @@ function index() {
     target: ref,
     offset: ["start start", "end start"],
   });
-  const words = [
-    {
-      text: "Talk",
-    },
-    {
-      text: "With",
-    },
-    {
-      text: "Documents",
-      className: "text-blue-500 dark:text-blue-500",
-    },
-  ];
+  
   const word = `Binary Master.Tech`;
   const pathLengthFirst = useTransform(scrollYProgress, [0, 0.8], [0.2, 1.2]);
   const pathLengthSecond = useTransform(scrollYProgress, [0, 0.8], [0.15, 1.2]);
