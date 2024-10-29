@@ -7,6 +7,9 @@ import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { useTransform, useScroll } from "framer-motion";
 import { GoogleGeminiEffect } from "@/components/ui/google-gemini-effect";
 import { Button } from "@/components/ui/moving-border";
+import { AppleCardsCarouselDemo } from "@/components/ui/apple";
+import Hero from "../components/Hero"
+
 
 function Index() {
   const [email, setEmail] = useState("");
@@ -57,6 +60,7 @@ function Index() {
 
   return (
     <>
+    <Hero/>
       <GoogleGeminiEffect
         pathLengths={[
           pathLengthFirst,
@@ -119,6 +123,8 @@ function Index() {
             pathLengthFifth,
           ]}
         />
+        <AppleCardsCarouselDemo/>
+
       </div>
     </>
   );
