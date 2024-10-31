@@ -8,8 +8,8 @@ import { useTransform, useScroll } from "framer-motion";
 import { GoogleGeminiEffect } from "@/components/ui/google-gemini-effect";
 import { Button } from "@/components/ui/moving-border";
 import { AppleCardsCarouselDemo } from "@/components/ui/apple";
-import Hero from "../components/Hero"
-
+import Hero from "../components/Hero";
+import { SparklesPreview } from "@/components/MVP";
 
 function Index() {
   const [email, setEmail] = useState("");
@@ -60,7 +60,7 @@ function Index() {
 
   return (
     <>
-    <Hero/>
+      <Hero />
       <GoogleGeminiEffect
         pathLengths={[
           pathLengthFirst,
@@ -71,7 +71,6 @@ function Index() {
         ]}
       />
       <TextGenerateEffect words={word} />
-
       <div className="flex flex-col items-center justify-center h-[40rem]">
         <p className="text-neutral-600 dark:text-neutral-200 text-xs sm:text-base">
           Let's Connect & build something great together
@@ -112,7 +111,10 @@ function Index() {
           Build, Scale, and Earn <br /> with your idea ! 🚀
         </motion.h1>
       </LampContainer>
-
+      <br />
+      <div className="flex flex-col md:flex-row justify-center items-center space-y-56  md:space-y-59 md:space-x-4 mt-8">
+        <SparklesPreview />
+      </div>
       <div className="h-[40rem] flex flex-col md:flex-row justify-center items-center px-4">
         <GoogleGeminiEffect
           pathLengths={[
@@ -123,8 +125,7 @@ function Index() {
             pathLengthFifth,
           ]}
         />
-        <AppleCardsCarouselDemo/>
-
+        <AppleCardsCarouselDemo />
       </div>
     </>
   );
