@@ -61,8 +61,8 @@ const data = [
     content: <DummyContent />,
   },
   {
-    category: "AI-Powered Websites",
-    title: "Enhance your productivity.",
+    category: "Game Development",
+    title: "Create Greate Games",
     src: "/aipowered.webp",
     content: <DummyContent />,
   },
