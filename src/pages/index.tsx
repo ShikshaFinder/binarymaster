@@ -11,6 +11,7 @@ import { AppleCardsCarouselDemo } from "@/components/ui/apple";
 import Hero from "../components/Hero";
 import { SparklesPreview } from "@/components/MVP";
 
+
 function Index() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("");
@@ -35,6 +36,7 @@ function Index() {
   });
 
   const word = `Binary Master.Tech`;
+  const comapny = 'GWSF Ventures PVT LTD (Registered Under Startup India)';
   const pathLengthFirst = useTransform(scrollYProgress, [0, 0.8], [0.2, 1.2]);
   const pathLengthSecond = useTransform(scrollYProgress, [0, 0.8], [0.15, 1.2]);
   const pathLengthThird = useTransform(scrollYProgress, [0, 0.8], [0.1, 1.2]);
@@ -127,6 +129,10 @@ function Index() {
         />
         <AppleCardsCarouselDemo />
       </div>
+      <br />
+            <div className="h-[40rem] flex flex-col md:flex-row justify-center items-center px-4">
+                <TextGenerateEffect words={comapny} />
+            </div>
     </>
   );
 }

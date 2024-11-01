@@ -29,9 +29,12 @@ const DummyContent = () => {
           >
             <p className="text-neutral-600 dark:text-neutral-400 text-base md:text-2xl font-sans max-w-3xl mx-auto">
               <span className="font-bold text-neutral-700 dark:text-neutral-200">
-                Connect Us On What'sAPP
+                <a href="https://wa.me/917984140706">
+                  {" "}
+                  Connect Us On What'sAPP
+                </a>
               </span>{" "}
-              It is Free To share the idea & Know the Pricing 
+              It is Free To share the idea & Know the Pricing
             </p>
             <Image
               src="https://assets.aceternity.com/macbook.png"
