@@ -42,7 +42,12 @@ export default function Summarize() {
 
   return (
     <div className="max-w-[600px] mx-auto p-5">
-      <h1 className="text-2xl font-bold mb-4">Summarize Text</h1>
+      <div className=" flex flex-col   items-center px-4">
+      <h2 className="mb-10 sm:mb-20 text-xl text-center sm:text-5xl dark:text-white text-black">
+        Know About Binary Master
+      </h2>
+          </div>
+
       <form onSubmit={handleSubmit}>
         <label htmlFor="inputText" className="block text-sm font-medium text-gray-700 mb-2">
           Know More About binary master
@@ -53,6 +58,7 @@ export default function Summarize() {
           onChange={(e) => setInputText(e.target.value)}
           className="w-full mb-4 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+        
         <button
           type="submit"
           disabled={loading}
