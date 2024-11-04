@@ -65,7 +65,7 @@ const data = [
   },
   {
     category: "Game Development",
-    title: "Create Greate Games",
+    title: "Create Great Games",
     src: "/aipowered.webp",
     content: <DummyContent />,
   },
