@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/moving-border";
 import { AppleCardsCarouselDemo } from "@/components/ui/apple";
 import Hero from "../components/Hero";
 import { SparklesPreview } from "@/components/MVP";
-
+import { AnimatedTestimonialsDemo } from "@/components/Testimonials";
 
 function Index() {
   const [email, setEmail] = useState("");
@@ -99,6 +99,7 @@ function Index() {
         {status && <p className="mt-2 text-sm text-gray-500">{status}</p>}
       </div>
 
+<AnimatedTestimonialsDemo/>
       <LampContainer>
         <motion.h1
           initial={{ opacity: 0.5, y: 100 }}

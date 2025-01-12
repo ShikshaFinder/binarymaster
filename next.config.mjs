@@ -5,6 +5,8 @@ const nextConfig = {
     domains: [
       "images.unsplash.com",
       "assets.aceternity.com",
+      "ldce-web-nine.vercel.app",
+      "encrypted-tbn0.gstatic.com",
     ],
   },
 };
