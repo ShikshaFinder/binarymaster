@@ -35,14 +35,14 @@ export const LampContainer = ({
 }) => {
   const links = [
     {
-      title: "WaitList",
+      title: "KnowBinaryMaster",
       icon: <IconLayoutNavbarCollapse />,
-      href: "/waitlist",
+      href: "/knowBinarymaster",
     },
     {
       title: "About",
       icon: <IconLayoutNavbarCollapse />,
-      href: "/about",
+      href: "/",
     },
     {
       title: "Github",
