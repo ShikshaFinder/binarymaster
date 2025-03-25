@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { motion, stagger, useAnimate } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-export const TextGenerateEffect = ({
+const TextGenerateEffect = ({
   words,
   className,
   filter = true,
@@ -51,12 +51,20 @@ export const TextGenerateEffect = ({
   };
 
   return (
-    <div className={cn("font-bold", className, "flex justify-center items-center h-full")}>
+    <div
+      className={cn(
+        "font-bold",
+        className,
+        "flex justify-center items-center h-full"
+      )}
+    >
       <div className="mt-4">
-      <div className="dark:text-white text-black text-4xl leading-snug tracking-wide text-center">
-        {renderWords()}
-      </div>
+        <div className="dark:text-white text-black text-4xl leading-snug tracking-wide text-center">
+          {renderWords()}
+        </div>
       </div>
     </div>
   );
 };
+
+export default TextGenerateEffect;

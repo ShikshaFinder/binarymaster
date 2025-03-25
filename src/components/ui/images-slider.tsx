@@ -21,8 +21,7 @@ export const ImagesSlider = ({
   direction?: "up" | "down";
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [loadedImages, setLoadedImages] = useState<string[]>([]);
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) =>
@@ -36,28 +35,36 @@ export const ImagesSlider = ({
     );
   };
 
+  // Preload images progressively
   useEffect(() => {
-    loadImages();
-  }, []);
-
-  const loadImages = () => {
-    setLoading(true);
-    const loadPromises = images.map((image) => {
-      return new Promise((resolve, reject) => {
+    const preloadImage = async (src: string) => {
+      try {
         const img = new Image();
-        img.src = image;
-        img.onload = () => resolve(image);
-        img.onerror = reject;
-      });
-    });
+        img.src = src;
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+        setLoadedImages((prev) => new Set([...Array.from(prev), src]));
+      } catch (error) {
+        console.error(`Error loading image: ${src}`, error);
+      }
+    };
 
-    Promise.all(loadPromises)
-      .then((loadedImages) => {
-        setLoadedImages(loadedImages as string[]);
-        setLoading(false);
-      })
-      .catch((error) => console.error("Failed to load images", error));
-  };
+    // Preload current image and next 2 images
+    const imagesToPreload = [
+      images[currentIndex],
+      images[(currentIndex + 1) % images.length],
+      images[(currentIndex + 2) % images.length],
+    ];
+
+    imagesToPreload.forEach((src) => {
+      if (!loadedImages.has(src)) {
+        preloadImage(src);
+      }
+    });
+  }, [currentIndex, images, loadedImages]);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "ArrowRight") {
@@ -114,7 +121,7 @@ export const ImagesSlider = ({
     },
   };
 
-  const areImagesLoaded = loadedImages.length > 0;
+  const areImagesLoaded = loadedImages.has(images[currentIndex]);
 
   return (
     <div
@@ -126,25 +133,33 @@ export const ImagesSlider = ({
         perspective: "1000px",
       }}
     >
-      {areImagesLoaded && children}
-      {areImagesLoaded && overlay && (
-        <div
-          className={cn("absolute inset-0 bg-black/60 z-40", overlayClassName)}
-        />
-      )}
-
-      {areImagesLoaded && (
-        <AnimatePresence>
-          <motion.img
-            key={currentIndex}
-            src={loadedImages[currentIndex]}
-            initial="initial"
-            animate="visible"
-            exit={direction === "up" ? "upExit" : "downExit"}
-            variants={slideVariants}
-            className="image h-full w-full absolute inset-0 object-cover object-center"
-          />
-        </AnimatePresence>
+      {!areImagesLoaded ? (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900" />
+        </div>
+      ) : (
+        <>
+          {children}
+          {overlay && (
+            <div
+              className={cn(
+                "absolute inset-0 bg-black/60 z-40",
+                overlayClassName
+              )}
+            />
+          )}
+          <AnimatePresence>
+            <motion.img
+              key={currentIndex}
+              src={images[currentIndex]}
+              initial="initial"
+              animate="visible"
+              exit={direction === "up" ? "upExit" : "downExit"}
+              variants={slideVariants}
+              className="image h-full w-full absolute inset-0 object-cover object-center"
+            />
+          </AnimatePresence>
+        </>
       )}
     </div>
   );

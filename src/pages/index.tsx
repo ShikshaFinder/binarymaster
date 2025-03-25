@@ -1,16 +1,35 @@
 import supabase from "../../supabase";
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { TypewriterEffectSmooth } from "../components/ui/typewriter-effect";
-import { LampContainer } from "@/components/ui/lamp";
-import { motion } from "framer-motion";
-import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
-import { useTransform, useScroll } from "framer-motion";
-import { GoogleGeminiEffect } from "@/components/ui/google-gemini-effect";
+import { motion, useTransform, useScroll } from "framer-motion";
 import { Button } from "@/components/ui/moving-border";
-import { AppleCardsCarouselDemo } from "@/components/ui/apple";
 import Hero from "../components/Hero";
-import { SparklesPreview } from "@/components/MVP";
-import { AnimatedTestimonialsDemo } from "@/components/Testimonials";
+
+// Lazy load components that are not immediately visible
+const LampContainer = lazy(() =>
+  import("@/components/ui/lamp").then((mod) => ({ default: mod.LampContainer }))
+);
+const TextGenerateEffect = lazy(
+  () => import("@/components/ui/text-generate-effect")
+);
+const GoogleGeminiEffect = lazy(() =>
+  import("@/components/ui/google-gemini-effect").then((mod) => ({
+    default: mod.GoogleGeminiEffect,
+  }))
+);
+const AppleCardsCarouselDemo = lazy(() =>
+  import("@/components/ui/apple").then((mod) => ({
+    default: mod.AppleCardsCarouselDemo,
+  }))
+);
+const SparklesPreview = lazy(() =>
+  import("@/components/MVP").then((mod) => ({ default: mod.SparklesPreview }))
+);
+const AnimatedTestimonialsDemo = lazy(() =>
+  import("@/components/Testimonials").then((mod) => ({
+    default: mod.AnimatedTestimonialsDemo,
+  }))
+);
 
 function Index() {
   const [email, setEmail] = useState("");
@@ -36,7 +55,7 @@ function Index() {
   });
 
   const word = `Binary Master.Tech`;
-  const comapny = 'GWSF Ventures PVT LTD (Registered Under Startup India)';
+  const comapny = "GWSF Ventures PVT LTD (Registered Under Startup India)";
   const pathLengthFirst = useTransform(scrollYProgress, [0, 0.8], [0.2, 1.2]);
   const pathLengthSecond = useTransform(scrollYProgress, [0, 0.8], [0.15, 1.2]);
   const pathLengthThird = useTransform(scrollYProgress, [0, 0.8], [0.1, 1.2]);
@@ -63,16 +82,20 @@ function Index() {
   return (
     <>
       <Hero />
-      <GoogleGeminiEffect
-        pathLengths={[
-          pathLengthFirst,
-          pathLengthSecond,
-          pathLengthThird,
-          pathLengthFourth,
-          pathLengthFifth,
-        ]}
-      />
-      <TextGenerateEffect words={word} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <GoogleGeminiEffect
+          pathLengths={[
+            pathLengthFirst,
+            pathLengthSecond,
+            pathLengthThird,
+            pathLengthFourth,
+            pathLengthFifth,
+          ]}
+        />
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <TextGenerateEffect words={word} />
+      </Suspense>
       <div className="flex flex-col items-center justify-center h-[40rem]">
         <p className="text-neutral-600 dark:text-neutral-200 text-xs sm:text-base">
           Let's Connect & build something great together
@@ -99,41 +122,51 @@ function Index() {
         {status && <p className="mt-2 text-sm text-gray-500">{status}</p>}
       </div>
 
-<AnimatedTestimonialsDemo/>
-      <LampContainer>
-        <motion.h1
-          initial={{ opacity: 0.5, y: 100 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{
-            delay: 0.3,
-            duration: 0.8,
-            ease: "easeInOut",
-          }}
-          className="mt-8 bg-gradient-to-br from-slate-300 to-slate-500 py-4 bg-clip-text text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl"
-        >
-          Build, Scale, and Earn <br /> with your idea ! 🚀
-        </motion.h1>
-      </LampContainer>
+      <Suspense fallback={<div>Loading...</div>}>
+        <AnimatedTestimonialsDemo />
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <LampContainer>
+          <motion.h1
+            initial={{ opacity: 0.5, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              delay: 0.3,
+              duration: 0.8,
+              ease: "easeInOut",
+            }}
+            className="mt-8 bg-gradient-to-br from-slate-300 to-slate-500 py-4 bg-clip-text text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl"
+          >
+            Build, Scale, and Earn <br /> with your idea ! 🚀
+          </motion.h1>
+        </LampContainer>
+      </Suspense>
       <br />
       <div className="flex flex-col md:flex-row justify-center items-center space-y-56  md:space-y-59 md:space-x-4 mt-8">
-        <SparklesPreview />
+        <Suspense fallback={<div>Loading...</div>}>
+          <SparklesPreview />
+        </Suspense>
       </div>
       <div className="h-[40rem] flex flex-col md:flex-row justify-center items-center px-4">
-        <GoogleGeminiEffect
-          pathLengths={[
-            pathLengthFirst,
-            pathLengthSecond,
-            pathLengthThird,
-            pathLengthFourth,
-            pathLengthFifth,
-          ]}
-        />
-        <AppleCardsCarouselDemo />
+        <Suspense fallback={<div>Loading...</div>}>
+          <GoogleGeminiEffect
+            pathLengths={[
+              pathLengthFirst,
+              pathLengthSecond,
+              pathLengthThird,
+              pathLengthFourth,
+              pathLengthFifth,
+            ]}
+          />
+        </Suspense>
+        <Suspense fallback={<div>Loading...</div>}>
+          <AppleCardsCarouselDemo />
+        </Suspense>
       </div>
       <br />
-            <div className="h-[40rem] flex flex-col md:flex-row justify-center items-center px-4">
-                <TextGenerateEffect words={comapny} />
-            </div>
+      <div className="h-[40rem] flex flex-col md:flex-row justify-center items-center px-4">
+        <TextGenerateEffect words={comapny} />
+      </div>
     </>
   );
 }
