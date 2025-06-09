@@ -34,6 +34,7 @@ const AnimatedTestimonialsDemo = lazy(() =>
 function Index() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   const wordz = [
     {
@@ -62,9 +63,29 @@ function Index() {
   const pathLengthFourth = useTransform(scrollYProgress, [0, 0.8], [0.05, 1.2]);
   const pathLengthFifth = useTransform(scrollYProgress, [0, 0.8], [0, 1.2]);
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+    if (newEmail && !validateEmail(newEmail)) {
+      setEmailError("Please enter a valid email address");
+    } else {
+      setEmailError("");
+    }
+  };
+
   const handleEmailSubmit = async () => {
     if (!email) {
       setStatus("Please enter an email.");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address");
       return;
     }
 
@@ -76,6 +97,7 @@ function Index() {
     } else {
       setStatus("Email added successfully!");
       setEmail("");
+      setEmailError("");
     }
   };
 
@@ -96,30 +118,37 @@ function Index() {
       <Suspense fallback={<div>Loading...</div>}>
         <TextGenerateEffect words={word} />
       </Suspense>
-      <div className="flex flex-col items-center justify-center h-[40rem]">
-        <p className="text-neutral-600 dark:text-neutral-200 text-xs sm:text-base">
+      <div className="flex flex-col items-center justify-center min-h-[40rem] px-4 sm:px-6 lg:px-8">
+        <p className="text-neutral-600 dark:text-neutral-200 text-xs sm:text-base text-center max-w-2xl">
           Let's Connect & build something great together
         </p>
         <TypewriterEffectSmooth words={wordz} />
-        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4">
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4 w-full max-w-md">
           <input
-            type="text"
+            type="email"
             placeholder="hello@gmail.com"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="rounded-lg border border-neutral-800 focus:ring-2 focus:ring-teal-500 w-full relative z-10 mt-4 bg-neutral-50 placeholder:text-neutral-700 p-3"
+            onChange={handleEmailChange}
+            className={`rounded-lg border ${
+              emailError ? "border-red-500" : "border-neutral-800"
+            } focus:ring-2 focus:ring-teal-500 w-full relative z-10 mt-4 bg-neutral-50 placeholder:text-neutral-700 p-3`}
           />
+          {emailError && (
+            <p className="text-red-500 text-sm mt-1">{emailError}</p>
+          )}
         </div>
         <br />
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4">
           <Button
-            className="w-40 h-10 rounded-xl bg-black border dark:border-white border-transparent text-white text-sm"
+            className="w-full md:w-40 h-10 rounded-xl bg-black border dark:border-white border-transparent text-white text-sm"
             onClick={handleEmailSubmit}
           >
             Connect Now
           </Button>
         </div>
-        {status && <p className="mt-2 text-sm text-gray-500">{status}</p>}
+        {status && (
+          <p className="mt-2 text-sm text-gray-500 text-center">{status}</p>
+        )}
       </div>
 
       <Suspense fallback={<div>Loading...</div>}>
@@ -142,12 +171,12 @@ function Index() {
         </LampContainer>
       </Suspense>
       <br />
-      <div className="flex flex-col md:flex-row justify-center items-center space-y-56  md:space-y-59 md:space-x-4 mt-8">
+      <div className="flex flex-col md:flex-row justify-center items-center space-y-8 md:space-y-0 md:space-x-4 mt-8 px-4">
         <Suspense fallback={<div>Loading...</div>}>
           <SparklesPreview />
         </Suspense>
       </div>
-      <div className="h-[40rem] flex flex-col md:flex-row justify-center items-center px-4">
+      <div className="min-h-[40rem] flex flex-col md:flex-row justify-center items-center px-4 py-8">
         <Suspense fallback={<div>Loading...</div>}>
           <GoogleGeminiEffect
             pathLengths={[
@@ -164,7 +193,7 @@ function Index() {
         </Suspense>
       </div>
       <br />
-      <div className="h-[40rem] flex flex-col md:flex-row justify-center items-center px-4">
+      <div className="min-h-[40rem] flex flex-col md:flex-row justify-center items-center px-4 py-8">
         <TextGenerateEffect words={comapny} />
       </div>
     </>
