@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import { ImagesSlider } from "./ui/images-slider";
 
 export default function ImagesSliderDemo() {
-  const [selectedNumber, setSelectedNumber] = useState("7984140706");
+  const [selectedNumber, setSelectedNumber] = useState("34652614894");
   const images = ["/transparancy.jpeg", "/trust.webp"];
 
   const phoneNumbers = {
-    india: "7984140706",
+    india: "917984140706",
     spain: "34652614894",
   };
 
@@ -60,15 +60,17 @@ export default function ImagesSliderDemo() {
               India (+91 7984140706)
             </option>
           </select>
-          <button className="px-4 py-2 backdrop-blur-sm border bg-emerald-300/10 border-emerald-500/20 text-white mx-auto text-center rounded-full relative mt-4 hover:bg-emerald-300/20 transition-colors duration-200">
-            <a
-              href={`https://wa.me/${selectedNumber}`}
-              className="flex items-center justify-center"
-            >
+          <a
+            href={`https://wa.me/${selectedNumber}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full"
+          >
+            <button className="w-full px-4 py-2 backdrop-blur-sm border bg-emerald-300/10 border-emerald-500/20 text-white mx-auto text-center rounded-full relative mt-4 hover:bg-emerald-300/20 transition-colors duration-200">
               <span className="text-sm sm:text-base">Connect Now →</span>
-            </a>
-            <div className="absolute inset-x-0 h-px -bottom-px bg-gradient-to-r w-3/4 mx-auto from-transparent via-emerald-500 to-transparent" />
-          </button>
+              <div className="absolute inset-x-0 h-px -bottom-px bg-gradient-to-r w-3/4 mx-auto from-transparent via-emerald-500 to-transparent" />
+            </button>
+          </a>
         </div>
       </motion.div>
     </ImagesSlider>
