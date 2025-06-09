@@ -45,9 +45,9 @@ export const LampContainer = ({
       href: "/",
     },
     {
-      title: "Github",
+      title: "teams",
       icon: <IconLayoutNavbarCollapse />,
-      href: "https://github.com/ShikshaFinder",
+      href: "/team",
     },
   ];
   return (
