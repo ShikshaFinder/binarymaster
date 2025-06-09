@@ -48,16 +48,16 @@ export default function ImagesSliderDemo() {
             }}
           >
             <option
-              value={phoneNumbers.india}
-              className="bg-emerald-900/90 text-white"
-            >
-              India (+91 7984140706)
-            </option>
-            <option
               value={phoneNumbers.spain}
               className="bg-emerald-900/90 text-white"
             >
               Spain (+34 652 61 48 94)
+            </option>
+            <option
+              value={phoneNumbers.india}
+              className="bg-emerald-900/90 text-white"
+            >
+              India (+91 7984140706)
             </option>
           </select>
           <button className="px-4 py-2 backdrop-blur-sm border bg-emerald-300/10 border-emerald-500/20 text-white mx-auto text-center rounded-full relative mt-4 hover:bg-emerald-300/20 transition-colors duration-200">
