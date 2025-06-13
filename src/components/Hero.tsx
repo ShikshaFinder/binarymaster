@@ -9,6 +9,7 @@ export default function ImagesSliderDemo() {
   const phoneNumbers = {
     india: "917984140706",
     spain: "34652614894",
+    Dubai: "971521774894",
   };
 
   const handleNumberChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -58,6 +59,12 @@ export default function ImagesSliderDemo() {
               className="bg-emerald-900/90 text-white"
             >
               India (+91 7984140706)
+            </option>
+            <option
+              value={phoneNumbers.Dubai}
+              className="bg-emerald-900/90 text-white"
+            >
+              Dubai (+971 521774894)
             </option>
           </select>
           <a
