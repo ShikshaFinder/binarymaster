@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { ImagesSlider } from "./ui/images-slider";
 
 export default function ImagesSliderDemo() {
-  const [selectedNumber, setSelectedNumber] = useState("34652614894");
+  const [selectedNumber, setSelectedNumber] = useState("971521774894");
   const images = ["/transparancy.jpeg", "/trust.webp"];
 
   const phoneNumbers = {
+    Dubai: "971521774894",
     india: "917984140706",
     spain: "34652614894",
-    Dubai: "971521774894",
   };
 
   const handleNumberChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -49,6 +49,12 @@ export default function ImagesSliderDemo() {
             }}
           >
             <option
+              value={phoneNumbers.Dubai}
+              className="bg-emerald-900/90 text-white"
+            >
+              Dubai (+971 521774894)
+            </option>
+            <option
               value={phoneNumbers.spain}
               className="bg-emerald-900/90 text-white"
             >
@@ -59,12 +65,6 @@ export default function ImagesSliderDemo() {
               className="bg-emerald-900/90 text-white"
             >
               India (+91 7984140706)
-            </option>
-            <option
-              value={phoneNumbers.Dubai}
-              className="bg-emerald-900/90 text-white"
-            >
-              Dubai (+971 521774894)
             </option>
           </select>
           <a
