@@ -19,7 +19,6 @@ interface UploadResult {
   error?: string;
   size?: number;
 }
-
 interface UploadRequest {
   files: formidable.File[];
   folderPaths?: string[];
