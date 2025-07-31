@@ -10,6 +10,8 @@ Create a `.env.local` file in your project root with the following variables:
 # Azure Blob Storage Configuration
 AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=https;AccountName=your_account_name;AccountKey=your_account_key;EndpointSuffix=core.windows.net
 AZURE_STORAGE_CONTAINER_NAME=documents
+AZURE_STORAGE_ACCOUNT_NAME=your_account_name
+AZURE_STORAGE_ACCOUNT_KEY=your_account_key
 
 # Optional: SAS Token for client-side uploads (if using the existing file-upload component)
 NEXT_PUBLIC_AZURE_SAS_TOKEN=your_sas_token_here
@@ -44,6 +46,13 @@ NEXT_PUBLIC_AZURE_SAS_TOKEN=your_sas_token_here
 - File grouping by folder
 - Better error handling
 
+### Image Upload (`/image-upload`)
+- Single image upload with title and description
+- Generates SAS URLs for uploaded images
+- JSON export functionality
+- Image validation and preview
+- Metadata storage
+
 ## API Endpoints
 
 ### `/api/upload`
@@ -57,6 +66,12 @@ NEXT_PUBLIC_AZURE_SAS_TOKEN=your_sas_token_here
 - Enhanced metadata
 - Better error reporting
 
+### `/api/image-upload`
+- Single image upload endpoint
+- Generates SAS URLs
+- Stores metadata (title, description)
+- Image validation
+
 ## Features
 
 - **Multiple File Upload:** Upload multiple files at once
@@ -66,15 +81,19 @@ NEXT_PUBLIC_AZURE_SAS_TOKEN=your_sas_token_here
 - **Error Handling:** Comprehensive error reporting
 - **File Validation:** File size and type validation
 - **Azure Integration:** Direct upload to Azure Blob Storage
+- **SAS URL Generation:** Secure, time-limited access URLs
+- **JSON Export:** Download image metadata as JSON file
 - **Responsive Design:** Works on desktop and mobile
 
 ## Usage
 
 1. Navigate to `/upload` for basic uploads
 2. Navigate to `/upload-advanced` for folder uploads
-3. Drag and drop files or click to select
-4. Use the "Select Folder" button for folder uploads
-5. Click "Upload All" to start the upload process
+3. Navigate to `/image-upload` for single image uploads with metadata
+4. Drag and drop files or click to select
+5. Use the "Select Folder" button for folder uploads
+6. Click "Upload All" to start the upload process
+7. For images: Add title and description, then export JSON
 
 ## Security Notes
 

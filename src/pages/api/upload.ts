@@ -6,7 +6,7 @@ import { promises as fs } from "fs";
 // Disable the default body parser to handle file uploads
 export const config = {
   api: {
-    bodyParser: false,
+    bodyParser: false,  
   },
 };
 
