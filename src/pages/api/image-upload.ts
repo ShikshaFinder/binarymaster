@@ -1,5 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { BlobServiceClient } from "@azure/storage-blob";
+import {
+  BlobServiceClient,
+  StorageSharedKeyCredential,
+  generateBlobSASQueryParameters,
+  BlobSASPermissions,
+} from "@azure/storage-blob";
 import formidable from "formidable";
 import { promises as fs } from "fs";
 
@@ -13,7 +18,7 @@ export const config = {
 interface ImageUploadResult {
   success: boolean;
   id?: string;
-  url?: string;
+  sasUrl?: string;
   error?: string;
 }
 
@@ -66,11 +71,14 @@ export default async function handler(
     // Get Azure Blob Storage configuration
     const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
     const containerName = process.env.AZURE_STORAGE_CONTAINER_NAME || "images";
+    const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
+    const accountKey = process.env.AZURE_STORAGE_ACCOUNT_KEY;
 
-    if (!connectionString) {
+    if (!connectionString || !accountName || !accountKey) {
       return res.status(500).json({
         success: false,
-        error: "Azure Storage connection string not configured",
+        error:
+          "Azure Storage configuration is missing. Please configure AZURE_STORAGE_CONNECTION_STRING, AZURE_STORAGE_ACCOUNT_NAME, and AZURE_STORAGE_ACCOUNT_KEY.",
       });
     }
 
@@ -112,8 +120,24 @@ export default async function handler(
         },
       });
 
-      // Generate URL
-      const url = blockBlobClient.url;
+      // Generate SAS URL for the uploaded image
+      const sharedKeyCredential = new StorageSharedKeyCredential(
+        accountName,
+        accountKey
+      );
+
+      const sasToken = generateBlobSASQueryParameters(
+        {
+          containerName: containerName,
+          blobName: blobName,
+          permissions: BlobSASPermissions.parse("r"), // Read permission only
+          startsOn: new Date(),
+          expiresOn: new Date(new Date().valueOf() + 365 * 24 * 60 * 60 * 1000), // 1 year expiry
+        },
+        sharedKeyCredential
+      );
+
+      const sasUrl = `${blockBlobClient.url}?${sasToken}`;
 
       // Clean up temporary file
       await fs.unlink(imageFile.filepath);
@@ -122,7 +146,7 @@ export default async function handler(
       const result: ImageUploadResult = {
         success: true,
         id: `${timestamp}-${sanitizedTitle}`,
-        url: url,
+        sasUrl: sasUrl,
       };
 
       res.status(200).json(result);
