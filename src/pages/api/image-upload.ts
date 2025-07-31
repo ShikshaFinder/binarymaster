@@ -1,10 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import {
-  BlobServiceClient,
-  StorageSharedKeyCredential,
-  generateBlobSASQueryParameters,
-  BlobSASPermissions,
-} from "@azure/storage-blob";
+import { BlobServiceClient } from "@azure/storage-blob";
 import formidable from "formidable";
 import { promises as fs } from "fs";
 
@@ -18,7 +13,7 @@ export const config = {
 interface ImageUploadResult {
   success: boolean;
   id?: string;
-  sasUrl?: string;
+  url?: string;
   error?: string;
 }
 
@@ -71,13 +66,11 @@ export default async function handler(
     // Get Azure Blob Storage configuration
     const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
     const containerName = process.env.AZURE_STORAGE_CONTAINER_NAME || "images";
-    const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
-    const accountKey = process.env.AZURE_STORAGE_ACCOUNT_KEY;
 
-    if (!connectionString || !accountName || !accountKey) {
+    if (!connectionString) {
       return res.status(500).json({
         success: false,
-        error: "Azure Storage configuration is missing",
+        error: "Azure Storage connection string not configured",
       });
     }
 
@@ -89,70 +82,68 @@ export default async function handler(
     // Ensure container exists
     await containerClient.createIfNotExists();
 
-    // Generate unique filename
-    const timestamp = Date.now();
-    const originalName = imageFile.originalFilename || "unknown";
-    const extension = originalName.split(".").pop() || "jpg";
-    const sanitizedTitle = title.replace(/[^a-zA-Z0-9-_]/g, "_").toLowerCase();
-    const blobName = `${timestamp}-${sanitizedTitle}.${extension}`;
+    try {
+      // Generate unique filename
+      const timestamp = Date.now();
+      const originalName = imageFile.originalFilename || "unknown";
+      const extension = originalName.split(".").pop() || "jpg";
+      const sanitizedTitle = title
+        .replace(/[^a-zA-Z0-9-_]/g, "_")
+        .toLowerCase();
+      const blobName = `${timestamp}-${sanitizedTitle}.${extension}`;
 
-    // Get blob client
-    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+      // Get blob client
+      const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-    // Read file content
-    const fileContent = await fs.readFile(imageFile.filepath);
+      // Read file content
+      const fileContent = await fs.readFile(imageFile.filepath);
 
-    // Upload to Azure Blob Storage with metadata
-    await blockBlobClient.upload(fileContent, fileContent.length, {
-      blobHTTPHeaders: {
-        blobContentType: imageFile.mimetype,
-      },
-      metadata: {
-        title: title,
-        description: description,
-        originalName: originalName,
-        uploadTimestamp: timestamp.toString(),
-        fileSize: fileContent.length.toString(),
-      },
-    });
+      // Upload to Azure Blob Storage with metadata
+      await blockBlobClient.upload(fileContent, fileContent.length, {
+        blobHTTPHeaders: {
+          blobContentType: imageFile.mimetype,
+        },
+        metadata: {
+          title: title,
+          description: description,
+          originalName: originalName,
+          uploadTimestamp: timestamp.toString(),
+          fileSize: fileContent.length.toString(),
+        },
+      });
 
-    // Generate SAS URL for the uploaded image
-    const sharedKeyCredential = new StorageSharedKeyCredential(
-      accountName,
-      accountKey
-    );
+      // Generate URL
+      const url = blockBlobClient.url;
 
-    const sasToken = generateBlobSASQueryParameters(
-      {
-        containerName: containerName,
-        blobName: blobName,
-        permissions: BlobSASPermissions.parse("r"), // Read permission only
-        startsOn: new Date(),
-        expiresOn: new Date(new Date().valueOf() + 365 * 24 * 60 * 60 * 1000), // 1 year expiry
-      },
-      sharedKeyCredential
-    );
+      // Clean up temporary file
+      await fs.unlink(imageFile.filepath);
 
-    const sasUrl = `${blockBlobClient.url}?${sasToken}`;
+      // Return success response
+      const result: ImageUploadResult = {
+        success: true,
+        id: `${timestamp}-${sanitizedTitle}`,
+        url: url,
+      };
 
-    // Clean up temporary file
-    await fs.unlink(imageFile.filepath);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error("Error uploading image:", error);
 
-    // Return success response
-    const result: ImageUploadResult = {
-      success: true,
-      id: `${timestamp}-${sanitizedTitle}`,
-      sasUrl: sasUrl,
-    };
+      // Clean up temporary file even if upload failed
+      try {
+        await fs.unlink(imageFile.filepath);
+      } catch (cleanupError) {
+        console.error("Error cleaning up temporary file:", cleanupError);
+      }
 
-    res.status(200).json(result);
+      res.status(500).json({
+        success: false,
+        error: "Failed to upload image",
+        message: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
   } catch (error) {
     console.error("Image upload API error:", error);
-
-    // Note: We can't clean up the temporary file here because the request stream
-    // has already been consumed and we can't re-parse it. The file will be
-    // cleaned up by the OS eventually.
-
     res.status(500).json({
       success: false,
       error: "Internal server error",

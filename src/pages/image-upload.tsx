@@ -18,7 +18,7 @@ interface ImageItem {
   description: string;
   fileName: string;
   fileSize: number;
-  sasUrl: string;
+  url: string;
   uploadDate: string;
   status: "pending" | "uploading" | "success" | "error";
   error?: string;
@@ -84,7 +84,7 @@ export default function ImageUploadPage() {
           description: description,
           fileName: currentImage.name,
           fileSize: currentImage.size,
-          sasUrl: result.sasUrl,
+          url: result.url,
           uploadDate: new Date().toISOString(),
           status: "success",
         };
@@ -125,7 +125,7 @@ export default function ImageUploadPage() {
         description: img.description,
         fileName: img.fileName,
         fileSize: img.fileSize,
-        sasUrl: img.sasUrl,
+        url: img.url,
         uploadDate: img.uploadDate,
       })),
     };
@@ -337,7 +337,7 @@ export default function ImageUploadPage() {
 
                         <div className="mt-3">
                           <a
-                            href={image.sasUrl}
+                            href={image.url}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-blue-400 hover:text-blue-300 text-sm underline"
